@@ -1,11 +1,15 @@
 <script lang="ts">
+  import { Router, Route } from "svelte-routing";
+
+  import Main from "./lib/Main.svelte";
+  import Login from "./lib/Login.svelte";
+
+  export let url = "";
 </script>
 
-<div>
-  <header>
-    <h1>Shufflify - Better shuffle play for Spotify</h1>
-  </header>
-  <main>Create random playlists for your Spotify library.</main>
-</div>
+<Router {url}>
+  <Route path="/" component={Login} />
+  <Route path="/app" component={Main} />
+</Router>
 
 <style></style>
