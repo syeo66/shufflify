@@ -19,8 +19,5 @@
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
-  },
-  "dependencies": {
-    "dracula-ui": "^1.0.6"
   }
 }
