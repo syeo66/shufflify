@@ -1,3 +1,13 @@
+<script lang="ts">
+  import { token } from "../stores/token";
+
+  console.log($token);
+
+  if (!$token) {
+    window.location.href = "/";
+  }
+</script>
+
 <div>
   <header>
     <h1>Shufflify - Better shuffle play for Spotify</h1>
