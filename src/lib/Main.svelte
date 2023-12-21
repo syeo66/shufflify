@@ -1,8 +1,6 @@
 <script lang="ts">
   import { token } from "../stores/token";
 
-  console.log($token);
-
   if (!$token) {
     window.location.href = "/";
   }
