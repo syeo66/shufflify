@@ -2,7 +2,7 @@ import { writable  } from 'svelte/store';
 
 
 function createTokenStore() {
-	const { subscribe, set } = writable<string>("");
+  const { subscribe, set } = writable<string>("");
 
   let currentToken = localStorage.getItem('token') || ""
   set(currentToken);
@@ -16,10 +16,10 @@ function createTokenStore() {
     set(token);
   }
 
-	return {
-		subscribe,
+  return {
+    subscribe,
     set: setToken,
-	};
+  };
 }
 
 export const token = createTokenStore();
