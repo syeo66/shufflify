@@ -2,7 +2,7 @@
   import login from "../functions/signInWithSpotify";
   import { token } from "../stores/token";
 
-  if ($token) {
+  $: if ($token) {
     window.location.href = "/app";
   }
 </script>
