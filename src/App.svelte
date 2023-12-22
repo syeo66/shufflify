@@ -1,8 +1,9 @@
 <script lang="ts">
   import { Router, Route } from "svelte-routing";
+  import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query";
 
-  import Main from "./lib/Main.svelte";
   import Login from "./lib/Login.svelte";
+  import Main from "./lib/Main.svelte";
   import { token } from "./stores/token";
 
   export let url = "";
@@ -13,12 +14,16 @@
       token.set(splitEntry[1]);
     }
   }
+
+  const queryClient = new QueryClient();
 </script>
 
-<Router {url}>
-  <Route path="/" component={Login} />
-  <Route path="/app" component={Main} />
-</Router>
+<QueryClientProvider client={queryClient}>
+  <Router {url}>
+    <Route path="/" component={Login} />
+    <Route path="/app" component={Main} />
+  </Router>
+</QueryClientProvider>
 
 <footer>
   This website is communicating with the Spotify API only. It never sends or

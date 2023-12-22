@@ -1,6 +1,7 @@
 <script lang="ts">
   import { navigate } from "svelte-routing";
   import { token } from "../stores/token";
+  import UserInfo from "./UserInfo.svelte";
 
   $: if (!$token) {
     navigate("/");
@@ -16,7 +17,10 @@
     <h1>Shufflify - Better shuffle for Spotify</h1>
     <button on:click={logout}>Logout</button>
   </header>
-  <main>Create random playlists for your Spotify library.</main>
+  <main>
+    <div><UserInfo /></div>
+    Create random playlists for your Spotify library.
+  </main>
 </div>
 
 <style>
