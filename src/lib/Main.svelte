@@ -15,12 +15,12 @@
 <div>
   <header>
     <h1>Shufflify - Better shuffle for Spotify</h1>
-    <button on:click={logout}>Logout</button>
+    <div>
+      <UserInfo />
+      <button on:click={logout}>Logout</button>
+    </div>
   </header>
-  <main>
-    <div><UserInfo /></div>
-    Create random playlists for your Spotify library.
-  </main>
+  <main>Create random playlists for your Spotify library.</main>
 </div>
 
 <style>
@@ -36,6 +36,13 @@
     left: 0;
     padding: 1rem;
     box-sizing: border-box;
+  }
+
+  header div {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    align-items: center;
   }
 
   h1 {

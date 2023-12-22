@@ -8,15 +8,27 @@
   });
 </script>
 
-<div class="card">
-  {#if $query.isPending}
-    Loading...
-  {/if}
-  {#if $query.error}
-    An error has occurred:
-    {$query.error.message}
-  {/if}
-  {#if $query.isSuccess}
-    <pre>{JSON.stringify($query.data, null, 2)}</pre>
-  {/if}
-</div>
+{#if $query.isPending}...{/if}
+{#if $query.error}
+  An error has occurred:
+  {$query.error.message}
+{/if}
+{#if $query.isSuccess}
+  <img
+    src={$query.data.images.find(({ width }) => width <= 64)?.url}
+    alt="Avatar of {$query.data.display_name}"
+    title={$query.data.display_name}
+  />
+{/if}
+
+<style>
+  img {
+    width: 42px;
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  }
+</style>
