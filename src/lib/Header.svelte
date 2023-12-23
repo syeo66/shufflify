@@ -1,15 +1,15 @@
 <script lang="ts">
-  import { navigate } from "svelte-routing";
-  import { token } from "../stores/token";
-  import UserInfo from "./UserInfo.svelte";
+  import { navigate } from 'svelte-routing'
+  import { token } from '../stores/token'
+  import UserInfo from './UserInfo.svelte'
 
   $: if (!$token) {
-    navigate("/");
+    navigate('/')
   }
 
   const logout = () => {
-    token.set("");
-  };
+    token.set('')
+  }
 </script>
 
 <header>

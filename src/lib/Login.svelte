@@ -1,9 +1,9 @@
 <script lang="ts">
-  import login from "../functions/signInWithSpotify";
-  import { token } from "../stores/token";
+  import login from '../functions/signInWithSpotify'
+  import { token } from '../stores/token'
 
   $: if ($token) {
-    window.location.href = "/app";
+    window.location.href = '/app'
   }
 </script>
 

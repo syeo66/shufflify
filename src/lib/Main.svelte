@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { navigate } from "svelte-routing";
-  import { token } from "../stores/token";
-  import Header from "./Header.svelte";
-  import Configuration from "./Configuration.svelte";
+  import { navigate } from 'svelte-routing'
+  import { token } from '../stores/token'
+  import Header from './Header.svelte'
+  import Configuration from './Configuration.svelte'
 
   $: if (!$token) {
-    navigate("/");
+    navigate('/')
   }
 </script>
 
@@ -23,7 +23,7 @@
     text-align: left;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-areas: "config main";
+    grid-template-areas: 'config main';
     gap: 1rem;
   }
 

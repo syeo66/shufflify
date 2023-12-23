@@ -3,7 +3,10 @@ module.exports = {
     "browser": true,
     "es2021": true
   },
-  "extends": "standard-with-typescript",
+  "extends": [
+    "standard-with-typescript", 
+    "plugin:prettier/recommended",
+  ],
   "overrides": [
   ],
   "parserOptions": {
@@ -13,5 +16,6 @@ module.exports = {
   "ignorePatterns": ["**/*.svelte"],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/comma-dangle": "off",
   }
 }

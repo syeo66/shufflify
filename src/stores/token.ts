@@ -2,7 +2,7 @@ import { writable } from 'svelte/store'
 
 export const TOKEN_KEY = 'shufflify.token'
 
-function createTokenStore () {
+function createTokenStore() {
   const { subscribe, set } = writable<string>('')
 
   const currentToken = localStorage.getItem(TOKEN_KEY) ?? ''
@@ -19,7 +19,7 @@ function createTokenStore () {
 
   return {
     subscribe,
-    set: setToken
+    set: setToken,
   }
 }
 

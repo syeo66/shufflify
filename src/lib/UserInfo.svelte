@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { createQuery } from "@tanstack/svelte-query";
-  import retrieveUserData from "../queries/retrieveUserData";
+  import { createQuery } from '@tanstack/svelte-query'
+  import retrieveUserData from '../queries/retrieveUserData'
 
   const query = createQuery({
-    queryKey: ["userInfo"],
+    queryKey: ['userInfo'],
     queryFn: retrieveUserData,
-  });
+  })
 </script>
 
 {#if $query.isPending}...{/if}

@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { Router, Route } from "svelte-routing";
-  import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query";
+  import { Router, Route } from 'svelte-routing'
+  import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query'
 
-  import Login from "./lib/Login.svelte";
-  import Main from "./lib/Main.svelte";
-  import { token } from "./stores/token";
+  import Login from './lib/Login.svelte'
+  import Main from './lib/Main.svelte'
+  import { token } from './stores/token'
 
-  export let url = "";
+  export let url = ''
 
-  for (const entry of window.location.hash.substring(1).split("&")) {
-    const splitEntry = entry.split("=");
-    if (splitEntry[0] === "access_token") {
-      token.set(splitEntry[1]);
+  for (const entry of window.location.hash.substring(1).split('&')) {
+    const splitEntry = entry.split('=')
+    if (splitEntry[0] === 'access_token') {
+      token.set(splitEntry[1])
     }
   }
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient()
 </script>
 
 <QueryClientProvider client={queryClient}>

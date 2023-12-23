@@ -7,8 +7,8 @@ const retrieveUserData = async (): Promise<User> => {
   const response = await fetch('https://api.spotify.com/v1/me', {
     method: 'get',
     headers: {
-      Authorization: `Bearer ${authenticated}`
-    }
+      Authorization: `Bearer ${authenticated}`,
+    },
   })
 
   return userSchema.parse(await response.json())
