@@ -1,6 +1,6 @@
 import { TOKEN_KEY } from '../stores/token'
 
-const getToken = () => {
+function getToken() {
   const token = localStorage.getItem(TOKEN_KEY)
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

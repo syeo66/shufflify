@@ -26,7 +26,7 @@ function createConfigurationStore() {
   const currentConfig = loadConfig()
   set(currentConfig)
 
-  const setConfiguration = (config: Configuration) => {
+  function setConfiguration(config: Configuration) {
     localStorage.setItem(CONFIG_KEY, JSON.stringify(config))
     set(config)
   }
@@ -37,7 +37,7 @@ function createConfigurationStore() {
   }
 }
 
-const loadConfig = (): Configuration => {
+function loadConfig(): Configuration {
   const value = localStorage.getItem(CONFIG_KEY) ?? ''
 
   try {

@@ -1,4 +1,4 @@
-const signInWithSpotify = () => {
+function signInWithSpotify() {
   const { VITE_CLIENT_ID: CLIENT_ID } = import.meta.env
 
   const appUrl = encodeURIComponent(window.location.href.split('#')[0])

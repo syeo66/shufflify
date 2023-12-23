@@ -8,7 +8,7 @@ function createTokenStore() {
   const currentToken = localStorage.getItem(TOKEN_KEY) ?? ''
   set(currentToken)
 
-  const setToken = (token: string) => {
+  function setToken(token: string) {
     if (token === '') {
       localStorage.removeItem(TOKEN_KEY)
     } else {

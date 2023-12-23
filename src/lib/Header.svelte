@@ -7,7 +7,7 @@
     navigate('/')
   }
 
-  const logout = () => {
+  function logout() {
     token.set('')
   }
 </script>
