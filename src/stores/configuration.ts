@@ -8,7 +8,8 @@ const initialConfig: Configuration = {
   amountType: 'minutes',
   purgeOnShuffel: true,
   randomListName: DEFAULT_PLAYLIST_NAME,
-  trackMinutes: 120,
+  trackCount: '30',
+  trackMinutes: '120',
 }
 
 function createConfigurationStore() {

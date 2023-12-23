@@ -5,14 +5,18 @@ const commonConfigSchema = z.object({
   randomListName: z.string(),
 })
 export const configurationSchema = z.discriminatedUnion('amountType', [
-  commonConfigSchema.extend({
-    amountType: z.literal('minutes'),
-    trackMinutes: z.number().min(1),
-  }),
-  commonConfigSchema.extend({
-    amountType: z.literal('trackcount'),
-    trackCount: z.number().min(1),
-  }),
+  commonConfigSchema
+    .extend({
+      amountType: z.literal('minutes'),
+      trackMinutes: z.string().default('120'),
+    })
+    .passthrough(),
+  commonConfigSchema
+    .extend({
+      amountType: z.literal('trackcount'),
+      trackCount: z.string().default('30'),
+    })
+    .passthrough(),
 ])
 export type Configuration = z.infer<typeof configurationSchema>
 
