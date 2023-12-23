@@ -1,22 +1,13 @@
 import { writable } from 'svelte/store'
-import { z } from 'zod'
+import { configurationSchema, type Configuration } from '../types'
 
 const CONFIG_KEY = 'shufflify.config'
-
-const configurationSchema = z.discriminatedUnion('amountType', [
-  z.object({
-    amountType: z.literal('minutes'),
-    trackMinutes: z.number().min(1),
-  }),
-  z.object({
-    amountType: z.literal('trackcount'),
-    trackCount: z.number().min(1),
-  }),
-])
-type Configuration = z.infer<typeof configurationSchema>
+const DEFAULT_PLAYLIST_NAME = 'Advanced Shuffle'
 
 const initialConfig: Configuration = {
   amountType: 'minutes',
+  purgeOnShuffel: true,
+  randomListName: DEFAULT_PLAYLIST_NAME,
   trackMinutes: 120,
 }
 
