@@ -20,7 +20,11 @@
       <button on:click={logout}>Logout</button>
     </div>
   </header>
-  <main>Create random playlists for your Spotify library.</main>
+
+  <section>
+    <div class="config card">Configuration</div>
+    <main>Create random playlists for your Spotify library.</main>
+  </section>
 </div>
 
 <style>
@@ -43,6 +47,22 @@
     align-items: flex-end;
     gap: 1rem;
     align-items: center;
+  }
+
+  section {
+    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "config main";
+    gap: 1rem;
+  }
+
+  .config {
+    grid-area: config;
+  }
+
+  main {
+    grid-area: main;
   }
 
   h1 {
