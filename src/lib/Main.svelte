@@ -22,7 +22,7 @@
   section {
     text-align: left;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 400px 1fr;
     grid-template-areas: 'config main';
     gap: 1rem;
   }
