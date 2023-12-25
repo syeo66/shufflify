@@ -28,7 +28,6 @@
     gap: 2rem;
     width: 100%;
     margin: 0;
-    position: fixed;
     top: 0;
     left: 0;
     padding: 1rem;
