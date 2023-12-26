@@ -5,6 +5,8 @@
 <div class="paylists card">
   <h2>Playlists</h2>
 
+  <button on:click={() => playlists.refetch()}>Refresh</button>
+
   <ul>
     {#each $playlists?.sort((a, b) => a.name
         .trim()
