@@ -20,8 +20,8 @@
 
 <QueryClientProvider client={queryClient}>
   <Router {url}>
-    <Route path="/" component={Login} />
     <Route path="/app" component={Main} />
+    <Route path="/" component={Login} />
   </Router>
 </QueryClientProvider>
 

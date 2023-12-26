@@ -1,18 +1,23 @@
 <script lang="ts">
   import { createQuery } from '@tanstack/svelte-query'
+  import { navigate } from 'svelte-routing'
+
+  import { token } from '../stores/token'
   import retrieveUserData from '../queries/retrieveUserData'
 
   const query = createQuery({
     queryKey: ['userInfo'],
     queryFn: retrieveUserData,
   })
+
+  $: if ($query.error) {
+    console.log($query.error)
+    token.set('')
+    navigate('/')
+  }
 </script>
 
 {#if $query.isPending}...{/if}
-{#if $query.error}
-  An error has occurred:
-  {$query.error.message}
-{/if}
 {#if $query.isSuccess}
   <img
     src={$query.data.images.find(({ width }) => width <= 64)?.url}
