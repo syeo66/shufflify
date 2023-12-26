@@ -42,3 +42,39 @@ export const userSchema = z.object({
   }),
 })
 export type User = z.infer<typeof userSchema>
+
+export const imageSchema = z.object({
+  height: z.number().nullable(),
+  url: z.string(),
+  width: z.number().nullable(),
+})
+
+export const playlistSchema = z.object({
+  collaborative: z.boolean(),
+  description: z.string(),
+  external_urls: z.object({
+    spotify: z.string(),
+  }),
+  href: z.string(),
+  id: z.string(),
+  images: z.array(imageSchema).optional(),
+  name: z.string(),
+  owner: z.object({
+    display_name: z.string(),
+  }),
+})
+export type Playlist = z.infer<typeof playlistSchema>
+
+export const playlistsSchema = z.array(playlistSchema)
+export type Playlists = z.infer<typeof playlistsSchema>
+
+export const playlistResponseSchema = z.object({
+  href: z.string(),
+  items: playlistsSchema,
+  limit: z.number(),
+  next: z.string().optional().nullable(),
+  offset: z.number(),
+  previous: z.string().optional().nullable(),
+  total: z.number(),
+})
+export type PlaylistResponse = z.infer<typeof playlistResponseSchema>

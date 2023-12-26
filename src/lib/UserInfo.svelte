@@ -7,7 +7,7 @@
 
   const query = createQuery({
     queryKey: ['userInfo'],
-    queryFn: retrieveUserData,
+    queryFn: () => retrieveUserData(),
   })
 
   $: if ($query.error) {
