@@ -1,11 +1,13 @@
 <script lang="ts">
   import { playlists } from '../stores/playlists'
+  import Refresh from './icons/Refresh.svelte'
 </script>
 
 <div class="paylists card">
-  <h2>Playlists</h2>
-
-  <button on:click={() => playlists.refetch()}>Refresh</button>
+  <div class="header">
+    <h2>Playlists</h2>
+    <button on:click={() => playlists.refetch()}><Refresh /></button>
+  </div>
 
   <ul>
     {#each $playlists?.sort((a, b) => a.name
@@ -14,6 +16,18 @@
       <li>{playlist.name}</li>
     {/each}
   </ul>
-
-  <pre>{JSON.stringify($playlists, null, 2)}</pre>
 </div>
+
+<style>
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header h2 {
+    margin: 0;
+  }
+</style>
