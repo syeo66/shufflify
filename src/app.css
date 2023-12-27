@@ -78,6 +78,9 @@ button {
   font-family: inherit;
   background-color: var(--color-primary);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: border-color 0.25s;
 }
 button:hover {
@@ -130,3 +133,15 @@ label:has(input[type="checkbox"]) {
   gap: 0.5rem;
 }
 
+.spin {
+  animation: spin 1s linear infinite;
+} 
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

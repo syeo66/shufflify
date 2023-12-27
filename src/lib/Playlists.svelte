@@ -6,11 +6,13 @@
 <div class="paylists card">
   <div class="header">
     <h2>Playlists</h2>
-    <button on:click={() => playlists.refetch()}><Refresh /></button>
+    <button on:click={() => playlists.refetch()} disabled={$playlists.isLoading}
+      ><Refresh class={$playlists.isLoading ? 'spin' : ''} /></button
+    >
   </div>
 
   <ul>
-    {#each $playlists?.sort((a, b) => a.name
+    {#each $playlists.data?.sort((a, b) => a.name
         .trim()
         .localeCompare(b.name.trim())) || [] as playlist}
       <li>{playlist.name}</li>
