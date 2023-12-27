@@ -1,5 +1,6 @@
 <script lang="ts">
   import { playlists } from '../stores/playlists'
+  import { configuration } from '../stores/configuration'
   import Refresh from './icons/Refresh.svelte'
 </script>
 
@@ -15,7 +16,13 @@
     {#each $playlists.data?.sort((a, b) => a.name
         .trim()
         .localeCompare(b.name.trim())) || [] as playlist}
-      <li><input type="checkbox" />{playlist.name}</li>
+      <li>
+        <input
+          type="checkbox"
+          bind:group={$configuration.checkedPlaylists}
+          value={playlist.id}
+        />{playlist.name}
+      </li>
     {/each}
   </ul>
 </div>

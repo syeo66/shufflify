@@ -1,6 +1,7 @@
 import { z } from 'zod'
 
 const commonConfigSchema = z.object({
+  checkedPlaylists: z.array(z.string()),
   purgeOnShuffel: z.boolean(),
   randomListName: z.string(),
 })

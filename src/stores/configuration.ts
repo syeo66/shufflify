@@ -6,6 +6,7 @@ const DEFAULT_PLAYLIST_NAME = 'Advanced Shuffle'
 
 const initialConfig: Configuration = {
   amountType: 'minutes',
+  checkedPlaylists: [],
   purgeOnShuffel: true,
   randomListName: DEFAULT_PLAYLIST_NAME,
   trackCount: '30',
