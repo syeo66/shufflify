@@ -55,6 +55,7 @@
   @container (min-width: 768px) {
     ul {
       columns: 2;
+      column-gap: 2rem;
     }
   }
 
@@ -75,7 +76,6 @@
 
   .counts {
     margin-left: auto;
-    margin-right: 1.5rem;
     background-color: var(--color-secondary);
     padding: 0.1rem 0.7rem;
     border-radius: 2rem;
