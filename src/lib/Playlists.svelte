@@ -22,6 +22,7 @@
           bind:group={$configuration.checkedPlaylists}
           value={playlist.id}
         />{playlist.name}
+        <div class="counts">{playlist.tracks.total}</div>
       </li>
     {/each}
   </ul>
@@ -70,5 +71,14 @@
 
   li > * {
     flex-shrink: 0;
+  }
+
+  .counts {
+    margin-left: auto;
+    margin-right: 1.5rem;
+    background-color: var(--color-secondary);
+    padding: 0.1rem 0.7rem;
+    border-radius: 2rem;
+    font-size: 0.7rem;
   }
 </style>

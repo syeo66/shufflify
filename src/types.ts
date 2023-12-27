@@ -63,6 +63,10 @@ export const playlistSchema = z.object({
   owner: z.object({
     display_name: z.string(),
   }),
+  tracks: z.object({
+    href: z.string(),
+    total: z.number(),
+  }),
 })
 export type Playlist = z.infer<typeof playlistSchema>
 
