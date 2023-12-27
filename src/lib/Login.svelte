@@ -12,3 +12,12 @@
     <button on:click={login}>Login with Spotify</button>
   </div>
 </main>
+
+<style>
+  .card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+  }
+</style>

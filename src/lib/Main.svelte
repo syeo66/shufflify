@@ -8,7 +8,7 @@
   import Playlists from './Playlists.svelte'
 
   $: if (!$token) {
-    navigate('/')
+    window.location.href = '/'
   }
 </script>
 
@@ -30,6 +30,13 @@
     grid-template-areas: 'main main' 'config playlists';
     gap: 1rem;
     padding: 1rem;
+  }
+
+  @media (max-width: 1024px) {
+    section {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'main' 'playlists' 'config';
+    }
   }
 
   main {
