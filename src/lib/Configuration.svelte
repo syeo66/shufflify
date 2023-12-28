@@ -30,6 +30,23 @@
   <div>
     <div class="field">
       <label>
+        <input type="checkbox" bind:checked={$configuration.syncFavorites} />
+        Synchronize Favorites
+      </label>
+    </div>
+
+    <div class="help">
+      {#if $configuration.syncFavorites}
+        Synchronize your favorite tracks for randomization.
+      {:else}
+        Do not synchronize your favorite tracks for randomization.
+      {/if}
+    </div>
+  </div>
+
+  <div>
+    <div class="field">
+      <label>
         Playlist Name
         <input type="text" bind:value={$configuration.randomListName} />
       </label>
@@ -43,13 +60,13 @@
   <div>
     <div class="field">
       <label>
-        <input type="checkbox" bind:checked={$configuration.purgeOnShuffel} />
+        <input type="checkbox" bind:checked={$configuration.purgeOnShuffle} />
         Purge Playlist
       </label>
     </div>
 
     <div class="help">
-      {#if $configuration.purgeOnShuffel}
+      {#if $configuration.purgeOnShuffle}
         An existing playlist will be purged before adding new tracks.
       {:else}
         The tracks will be prepended if there is an existing playlist.
