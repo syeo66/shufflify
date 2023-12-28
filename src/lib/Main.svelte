@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { navigate } from 'svelte-routing'
-
   import { token } from '../stores/token'
 
   import Configuration from './Configuration.svelte'
   import Header from './Header.svelte'
   import Playlists from './Playlists.svelte'
+  import Stats from './Stats.svelte'
+
+  import Refresh from './icons/Refresh.svelte'
 
   $: if (!$token) {
     window.location.href = '/'
@@ -18,7 +19,13 @@
   <section>
     <Configuration />
     <Playlists />
-    <main>Create random playlists for your Spotify library.</main>
+    <main class="card">
+      <button>
+        <Refresh />
+        Synchronize Tracks</button
+      >
+      <Stats />
+    </main>
   </section>
 </div>
 
@@ -41,5 +48,8 @@
 
   main {
     grid-area: main;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>

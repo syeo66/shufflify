@@ -84,3 +84,58 @@ export const playlistResponseSchema = z.object({
   total: z.number(),
 })
 export type PlaylistResponse = z.infer<typeof playlistResponseSchema>
+
+export const artistSchema = z.object({
+  external_urls: z.object({
+    spotify: z.string(),
+  }),
+  id: z.string(),
+  name: z.string(),
+  type: z.string(),
+  uri: z.string(),
+  display_name: z.string().optional().nullable(),
+})
+export type Artist = z.infer<typeof artistSchema>
+
+export const albumSchema = z.object({
+  album_type: z.string(),
+  artists: z.array(artistSchema),
+  id: z.string(),
+  images: z.array(imageSchema),
+  name: z.string(),
+  release_date: z.string(),
+  total_tracks: z.number(),
+})
+export type Album = z.infer<typeof albumSchema>
+
+export const trackSchema = z.object({
+  album: albumSchema,
+  artists: z.array(artistSchema),
+  id: z.string(),
+  name: z.string(),
+  preview_url: z.string().nullable(),
+  track_number: z.number(),
+  type: z.string(),
+  uri: z.string(),
+})
+export type Track = z.infer<typeof trackSchema>
+
+export const itemSchema = z.object({
+  added_at: z.string(),
+  track: trackSchema,
+})
+export type Item = z.infer<typeof itemSchema>
+
+export const tracksSchema = z.array(itemSchema)
+export type Tracks = z.infer<typeof tracksSchema>
+
+export const tracksResponseSchema = z.object({
+  href: z.string(),
+  items: tracksSchema,
+  limit: z.number(),
+  next: z.string().optional().nullable(),
+  offset: z.number(),
+  previous: z.string().optional().nullable(),
+  total: z.number(),
+})
+export type TrackResponse = z.infer<typeof tracksResponseSchema>

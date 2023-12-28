@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@tanstack/svelte-query": "^5.14.2",
+    "dexie": "^4.0.1-beta.6",
     "zod": "^3.22.4"
   }
 }
