@@ -16,6 +16,10 @@
 </script>
 
 <div>
+  {#if $trackSync.isLoading}
+    <progress class="progress" value={$trackSync.progress} max={$trackSync.total} />
+  {/if}
+
   <Header />
 
   <section>
@@ -32,6 +36,15 @@
 </div>
 
 <style>
+  .progress {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    pointer-events: none;
+  }
+
   section {
     text-align: left;
     display: grid;

@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store'
-import { tracksResponseSchema, type Playlists } from '../types'
+import { tracksResponseSchema, type Playlists, type Playlist } from '../types'
 import getToken from '../functions/getToken'
 
 interface Progress {
@@ -10,29 +10,38 @@ interface Progress {
       total: number
     }
   >
+  progress: number
+  total: number
   isLoading: boolean
 }
 
-const INITIAL_PROGRESS = { data: {}, isLoading: false }
+const INITIAL_PROGRESS = { data: {}, isLoading: false, progress: 0, total: 0 }
 
 function createTrackSyncStore() {
   const { subscribe, set } = writable<Progress>(INITIAL_PROGRESS)
 
   let currentProgress: Progress = INITIAL_PROGRESS
 
-  async function fetchTracks(url: string | null) {
-    while (url !== '' && url !== null) {
+  async function fetchTracks(playlist: Playlist) {
+    let url = playlist.tracks.href
+
+    while (url !== '') {
       const response = await fetch(url, {
         method: 'get',
         headers: {
           Authorization: `Bearer ${getToken()}`,
         },
       })
+
       const tracks = tracksResponseSchema.safeParse(await response.json())
 
       if (tracks.success) {
-        url = tracks.data.next ?? null
         // TODO: store track in db using dexie
+
+        url = tracks.data.next ?? ''
+        currentProgress.data[playlist.id].progress += tracks.data.items.length
+        currentProgress.progress += tracks.data.items.length
+        set(currentProgress)
       }
       if (!tracks.success) {
         console.error(tracks.error)
@@ -49,9 +58,10 @@ function createTrackSyncStore() {
         progress: 0,
         total: playlist.tracks.total,
       }
+      currentProgress.total += playlist.tracks.total
       set(currentProgress)
 
-      await fetchTracks(playlist.tracks.href)
+      await fetchTracks(playlist)
     })
 
     await Promise.all(fetching)
