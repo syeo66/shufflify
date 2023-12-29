@@ -2,22 +2,28 @@ import { derived } from 'svelte/store'
 import { configuration } from './configuration'
 import { playlists } from './playlists'
 import { savedTrackCount } from './savedTrackCount'
+import type { Playlists } from '../types'
 
 type Stores = [typeof configuration, typeof playlists, typeof savedTrackCount]
-type StoreData = {
+interface StoreData {
   selectedTrackCount: number
-} | null
+  selectedPlaylists: Playlists
+}
+
+const INITIAL_STATE = { selectedTrackCount: 0, selectedPlaylists: [] }
 
 export const stats = derived<Stores, StoreData>([configuration, playlists, savedTrackCount], ([$c, $p, $s], set) => {
   if ($p.isLoading) {
-    set(null)
+    set(INITIAL_STATE)
   }
+
+  const selectedPlaylists = $p.data?.filter((playlist) => $c.checkedPlaylists.includes(playlist.id)) ?? []
 
   const selectedTrackCount =
     ($c.syncFavorites ? $s : 0) +
-    ($p.data?.reduce((acc, playlist) => {
-      return acc + ($c.checkedPlaylists.includes(playlist.id) ? playlist.tracks.total : 0)
+    (selectedPlaylists.reduce((acc, playlist) => {
+      return acc + playlist.tracks.total
     }, 0) ?? 0)
 
-  set({ selectedTrackCount })
+  set({ selectedTrackCount, selectedPlaylists })
 })

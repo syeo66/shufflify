@@ -1,5 +1,7 @@
 <script lang="ts">
   import { token } from '../stores/token'
+  import { trackSync } from '../stores/trackSync'
+  import { stats } from '../stores/stats'
 
   import Configuration from './Configuration.svelte'
   import Header from './Header.svelte'
@@ -20,8 +22,8 @@
     <Configuration />
     <Playlists />
     <main class="card">
-      <button>
-        <Refresh />
+      <button on:click={() => trackSync.start($stats.selectedPlaylists)} disabled={!!$trackSync.isLoading}>
+        <Refresh class={$trackSync.isLoading ? 'spin' : ''} />
         Synchronize Tracks</button
       >
       <Stats />
