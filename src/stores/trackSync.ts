@@ -53,6 +53,12 @@ function createTrackSyncStore() {
     currentProgress = INITIAL_PROGRESS
     currentProgress.isLoading = true
 
+    // TODO: add sync of liked tracks
+    // this will require a more
+    // generic interface for
+    // the fetchTracks
+    // function
+
     const fetching = playlists.map(async (playlist) => {
       currentProgress.data[playlist.id] = {
         progress: 0,
