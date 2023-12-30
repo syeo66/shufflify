@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store'
 import { tracksResponseSchema, type Playlists, type Playlist } from '../types'
 import getToken from '../functions/getToken'
+import { db } from '../db'
 
 interface Progress {
   data: Record<
@@ -36,7 +37,9 @@ function createTrackSyncStore() {
       const tracks = tracksResponseSchema.safeParse(await response.json())
 
       if (tracks.success) {
-        // TODO: store track in db using dexie
+        await db.tracks.bulkPut(
+          tracks.data.items.map((track) => ({ trackId: track.track.id, playlistId: playlist.id, isSynced: 1 })),
+        )
 
         url = tracks.data.next ?? ''
         currentProgress.data[playlist.id].progress += tracks.data.items.length
@@ -52,6 +55,11 @@ function createTrackSyncStore() {
   async function sync(playlists: Playlists) {
     currentProgress = INITIAL_PROGRESS
     currentProgress.isLoading = true
+    set(currentProgress)
+
+    await db.tracks.toCollection().modify((track) => {
+      track.isSynced = 0
+    })
 
     // TODO: add sync of liked tracks
     // this will require a more
@@ -71,6 +79,9 @@ function createTrackSyncStore() {
     })
 
     await Promise.all(fetching)
+
+    await db.tracks.where('isSynced').equals(0).delete()
+
     currentProgress.isLoading = false
     set(currentProgress)
   }

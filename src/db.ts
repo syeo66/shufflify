@@ -1,20 +1,21 @@
 import Dexie, { type Table } from 'dexie'
 
 export interface Track {
-  id: string
+  id?: number
+  trackId: string
   playlistId: string
-  isSynced: boolean
+  isSynced: 0 | 1
 }
 
 export class ShufflifyDexie extends Dexie {
-  // 'friends' is added by dexie when declaring the stores()
+  // 'tracks' is added by dexie when declaring the stores()
   // We just tell the typing system this is the case
-  friends!: Table<Track>
+  tracks!: Table<Track>
 
   constructor() {
     super('shufflify')
     this.version(1).stores({
-      tracks: 'id, playlistId, isSynced',
+      tracks: '&[trackId+playlistId], trackId, playlistId, isSynced',
     })
   }
 }
