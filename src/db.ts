@@ -5,6 +5,7 @@ export interface Track {
   trackId: string
   playlistId: string
   isSynced: 0 | 1
+  timestamp: number
 }
 
 export class ShufflifyDexie extends Dexie {
@@ -15,7 +16,7 @@ export class ShufflifyDexie extends Dexie {
   constructor() {
     super('shufflify')
     this.version(1).stores({
-      tracks: '&[trackId+playlistId], trackId, playlistId, isSynced',
+      tracks: '&[trackId+playlistId], trackId, playlistId, isSynced, timestamp',
     })
   }
 }

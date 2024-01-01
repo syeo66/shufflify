@@ -38,7 +38,12 @@ function createTrackSyncStore() {
 
       if (tracks.success) {
         await db.tracks.bulkPut(
-          tracks.data.items.map((track) => ({ trackId: track.track.id, playlistId: playlist.id, isSynced: 1 })),
+          tracks.data.items.map((track) => ({
+            isSynced: 1,
+            playlistId: playlist.id,
+            timestamp: Date.now(),
+            trackId: track.track.id,
+          })),
         )
 
         url = tracks.data.next ?? ''
