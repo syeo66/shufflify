@@ -19,5 +19,14 @@
     justify-content: center;
     align-items: center;
     margin: 2rem;
+    box-sizing: border-box;
+    width: calc(100% - 4rem);
+  }
+
+  main {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    margin: 0;
   }
 </style>

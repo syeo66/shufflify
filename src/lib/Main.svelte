@@ -67,4 +67,17 @@
     justify-content: space-between;
     align-items: center;
   }
+
+  @media (max-width: 1024px) {
+    main {
+      flex-direction: column;
+      text-align: left;
+      align-items: flex-start;
+    }
+
+    main button {
+      align-self: center;
+      margin-bottom: 1rem;
+    }
+  }
 </style>
