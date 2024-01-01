@@ -1,7 +1,10 @@
 import { writable } from 'svelte/store'
-import { tracksResponseSchema, type Playlists, type Playlist } from '../types'
-import getToken from '../functions/getToken'
+
 import { db } from '../db'
+import { loadConfig } from './configuration'
+import { tracksResponseSchema, type Playlists } from '../types'
+
+import getToken from '../functions/getToken'
 
 interface Progress {
   data: Record<
@@ -16,6 +19,11 @@ interface Progress {
   isLoading: boolean
 }
 
+interface FetchTracksInput {
+  url: string
+  id: string
+}
+
 const INITIAL_PROGRESS = { data: {}, isLoading: false, progress: 0, total: 0 }
 
 function createTrackSyncStore() {
@@ -23,8 +31,8 @@ function createTrackSyncStore() {
 
   let currentProgress: Progress = INITIAL_PROGRESS
 
-  async function fetchTracks(playlist: Playlist) {
-    let url = playlist.tracks.href
+  async function fetchTracks(input: FetchTracksInput) {
+    let url = input.url
 
     while (url !== '') {
       const response = await fetch(url, {
@@ -40,14 +48,22 @@ function createTrackSyncStore() {
         await db.tracks.bulkPut(
           tracks.data.items.map((track) => ({
             isSynced: 1,
-            playlistId: playlist.id,
+            playlistId: input.id,
             timestamp: Date.now(),
             trackId: track.track.id,
           })),
         )
 
         url = tracks.data.next ?? ''
-        currentProgress.data[playlist.id].progress += tracks.data.items.length
+
+        if (currentProgress.data[input.id] === undefined) {
+          currentProgress.total += tracks.data.total
+          currentProgress.data[input.id] = {
+            progress: 0,
+            total: tracks.data.total,
+          }
+        }
+        currentProgress.data[input.id].progress += tracks.data.items.length
         currentProgress.progress += tracks.data.items.length
         set(currentProgress)
       }
@@ -58,19 +74,13 @@ function createTrackSyncStore() {
   }
 
   async function sync(playlists: Playlists) {
-    currentProgress = INITIAL_PROGRESS
+    currentProgress = structuredClone(INITIAL_PROGRESS)
     currentProgress.isLoading = true
     set(currentProgress)
 
     await db.tracks.toCollection().modify((track) => {
       track.isSynced = 0
     })
-
-    // TODO: add sync of liked tracks
-    // this will require a more
-    // generic interface for
-    // the fetchTracks
-    // function
 
     const fetching = playlists.map(async (playlist) => {
       currentProgress.data[playlist.id] = {
@@ -80,8 +90,13 @@ function createTrackSyncStore() {
       currentProgress.total += playlist.tracks.total
       set(currentProgress)
 
-      await fetchTracks(playlist)
+      await fetchTracks({ url: playlist.tracks.href, id: playlist.id })
     })
+
+    const config = loadConfig()
+    if (config.syncFavorites) {
+      await fetchTracks({ url: 'https://api.spotify.com/v1/me/tracks?limit=50', id: 'liked' })
+    }
 
     await Promise.all(fetching)
 

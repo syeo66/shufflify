@@ -31,7 +31,7 @@ function createConfigurationStore() {
   }
 }
 
-function loadConfig(): Configuration {
+export function loadConfig(): Configuration {
   const value = localStorage.getItem(CONFIG_KEY) ?? ''
 
   try {
