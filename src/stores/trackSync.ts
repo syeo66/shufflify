@@ -78,9 +78,7 @@ function createTrackSyncStore() {
     currentProgress.isLoading = true
     set(currentProgress)
 
-    await db.tracks.toCollection().modify((track) => {
-      track.isSynced = 0
-    })
+    await db.tracks.clear()
 
     const fetching = playlists.map(async (playlist) => {
       currentProgress.data[playlist.id] = {
