@@ -13,15 +13,9 @@
   </div>
 
   <ul>
-    {#each $playlists.data?.sort((a, b) => a.name
-        .trim()
-        .localeCompare(b.name.trim())) || [] as playlist}
+    {#each $playlists.data?.sort((a, b) => a.name.trim().localeCompare(b.name.trim())) || [] as playlist}
       <li>
-        <input
-          type="checkbox"
-          bind:group={$configuration.checkedPlaylists}
-          value={playlist.id}
-        />{playlist.name}
+        <input type="checkbox" bind:group={$configuration.checkedPlaylists} value={playlist.id} />{playlist.name}
         <div class="counts">{playlist.tracks.total}</div>
       </li>
     {/each}
@@ -61,6 +55,7 @@
 
   li {
     display: flex;
+    text-wrap: balance;
     align-items: center;
     gap: 1rem;
     margin-bottom: 0.5rem;
