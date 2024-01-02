@@ -2,7 +2,7 @@ import { writable } from 'svelte/store'
 
 import { db } from '../db'
 import { loadConfig } from './configuration'
-import { tracksResponseSchema, type Playlists } from '../types'
+import { tracksResponseSchema, type Playlists, type Tracks } from '../types'
 
 import getToken from '../functions/getToken'
 
@@ -33,6 +33,7 @@ function createTrackSyncStore() {
 
   async function fetchTracks(input: FetchTracksInput) {
     let url = input.url
+    const allTracks: Tracks = []
 
     while (url !== '') {
       const response = await fetch(url, {
@@ -45,14 +46,7 @@ function createTrackSyncStore() {
       const tracks = tracksResponseSchema.safeParse(await response.json())
 
       if (tracks.success) {
-        await db.tracks.bulkPut(
-          tracks.data.items.map((track) => ({
-            isSynced: 1,
-            playlistId: input.id,
-            timestamp: Date.now(),
-            trackId: track.track.id,
-          })),
-        )
+        allTracks.push(...tracks.data.items)
 
         url = tracks.data.next ?? ''
 
@@ -71,6 +65,14 @@ function createTrackSyncStore() {
         console.error(tracks.error)
       }
     }
+    await db.tracks.bulkPut(
+      allTracks.map((track) => ({
+        isSynced: 1,
+        playlistId: input.id,
+        timestamp: Date.now(),
+        trackId: track.track.id,
+      })),
+    )
   }
 
   async function sync(playlists: Playlists) {
