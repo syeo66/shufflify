@@ -93,12 +93,10 @@ function createTrackSyncStore() {
 
     const config = loadConfig()
     if (config.syncFavorites) {
-      await fetchTracks({ url: 'https://api.spotify.com/v1/me/tracks?limit=50', id: 'liked' })
+      fetching.push(fetchTracks({ url: 'https://api.spotify.com/v1/me/tracks?limit=50', id: 'liked' }))
     }
 
     await Promise.all(fetching)
-
-    await db.tracks.where('isSynced').equals(0).delete()
 
     currentProgress.isLoading = false
     set(currentProgress)
