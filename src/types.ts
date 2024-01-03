@@ -53,7 +53,7 @@ export const imageSchema = z.object({
 
 export const playlistSchema = z.object({
   collaborative: z.boolean(),
-  description: z.string(),
+  description: z.string().nullable(),
   external_urls: z.object({
     spotify: z.string(),
   }),
@@ -64,6 +64,7 @@ export const playlistSchema = z.object({
   owner: z.object({
     display_name: z.string(),
   }),
+  snapshot_id: z.string().optional(),
   tracks: z.object({
     href: z.string(),
     total: z.number(),

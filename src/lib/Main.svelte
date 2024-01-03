@@ -1,17 +1,73 @@
 <script lang="ts">
+  import { liveQuery } from 'dexie'
+
+  import { configuration } from '../stores/configuration'
+  import { db } from '../db'
+  import { playlistSchema, type Playlist } from '../types'
+  import { playlists } from '../stores/playlists'
+  import { stats } from '../stores/stats'
   import { token } from '../stores/token'
   import { trackSync } from '../stores/trackSync'
-  import { stats } from '../stores/stats'
 
   import Configuration from './Configuration.svelte'
   import Header from './Header.svelte'
   import Playlists from './Playlists.svelte'
   import Stats from './Stats.svelte'
-
   import Refresh from './icons/Refresh.svelte'
+
+  let lastUpdated = liveQuery(() => db.tracks.orderBy('timestamp').last())
+
+  let isShuffling = false
 
   $: if (!$token) {
     window.location.href = '/'
+  }
+
+  $: console.log($configuration)
+  $: console.log($playlists)
+
+  async function createRandomPlaylist(): Promise<Playlist> {
+    const url = 'https://api.spotify.com/v1/me/playlists'
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${$token}`,
+      },
+      body: JSON.stringify({
+        name: $configuration.randomListName,
+        description: 'Shufflify Playlist',
+        public: false,
+      }),
+    })
+
+    const data = await response.json()
+    await playlists.refetch()
+    return playlistSchema.parse(data)
+  }
+
+  async function purgeRandomPlaylist(playlist: Playlist) {}
+
+  async function fillRandomPlaylist(playlist: Playlist) {}
+
+  async function shuffle() {
+    isShuffling = true
+    await playlists.refetch()
+
+    let existingPlaylist = $playlists.data?.find((playlist) => playlist.name === $configuration.randomListName)
+
+    if (!existingPlaylist) {
+      existingPlaylist = await createRandomPlaylist()
+    } else {
+      await purgeRandomPlaylist(existingPlaylist)
+    }
+
+    await fillRandomPlaylist(existingPlaylist)
+
+    console.log(existingPlaylist)
+
+    isShuffling = false
   }
 </script>
 
@@ -25,12 +81,24 @@
   <section>
     <Configuration />
     <Playlists />
+
     <main class="card">
-      <button on:click={() => trackSync.start($stats.selectedPlaylists)} disabled={!!$trackSync.isLoading}>
-        <Refresh class={$trackSync.isLoading ? 'spin' : ''} />
-        Synchronize Tracks</button
-      >
-      <Stats />
+      <div class="stats">
+        <button on:click={() => trackSync.start($stats.selectedPlaylists)} disabled={!!$trackSync.isLoading}>
+          <Refresh class={$trackSync.isLoading ? 'spin' : ''} />
+          Synchronize Tracks</button
+        >
+        <Stats />
+      </div>
+
+      {#if $lastUpdated?.timestamp && !$trackSync.isLoading}
+        <div class="shuffle">
+          <button on:click={shuffle} disabled={isShuffling}>
+            <Refresh class={isShuffling ? 'spin' : ''} />
+            Shuffle
+          </button>
+        </div>
+      {/if}
     </main>
   </section>
 </div>
@@ -62,6 +130,19 @@
   }
 
   main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .shuffle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .stats {
     grid-area: main;
     display: flex;
     justify-content: space-between;
