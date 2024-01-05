@@ -26,6 +26,23 @@
   $: console.log($configuration)
   $: console.log($playlists)
 
+  async function addRandomTracks(playlist: Playlist, trackUris: string[]) {
+    const playlistId = playlist.id
+    const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${$token}`,
+      },
+      body: JSON.stringify({
+        uris: trackUris,
+        position: 0,
+      }),
+    })
+  }
+
   async function createRandomPlaylist(): Promise<Playlist> {
     const url = 'https://api.spotify.com/v1/me/playlists'
 
@@ -47,20 +64,30 @@
     return playlistSchema.parse(data)
   }
 
-  async function purgeRandomPlaylist(playlist: Playlist) {}
-
   async function fillRandomPlaylist(playlist: Playlist) {}
 
   async function shuffle() {
     isShuffling = true
     await playlists.refetch()
 
-    let existingPlaylist = $playlists.data?.find((playlist) => playlist.name === $configuration.randomListName)
+    let existingPlaylist = $playlists.data?.find((playlist) => playlist.name === $configuration.randomListName) ?? null
+
+    if ($configuration.purgeOnShuffle && existingPlaylist) {
+      const url = `https://api.spotify.com/v1/playlists/${existingPlaylist.id}/followers`
+      await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${$token}`,
+        },
+        method: 'DELETE',
+        body: JSON.stringify({
+          snapshot_id: existingPlaylist.snapshot_id,
+        }),
+      })
+      existingPlaylist = null
+    }
 
     if (!existingPlaylist) {
       existingPlaylist = await createRandomPlaylist()
-    } else {
-      await purgeRandomPlaylist(existingPlaylist)
     }
 
     await fillRandomPlaylist(existingPlaylist)
