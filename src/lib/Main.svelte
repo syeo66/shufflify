@@ -23,9 +23,6 @@
     window.location.href = '/'
   }
 
-  $: console.log($configuration)
-  $: console.log($playlists)
-
   async function addRandomTracks(playlist: Playlist, trackUris: string[]) {
     const playlistId = playlist.id
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
@@ -64,7 +61,15 @@
     return playlistSchema.parse(data)
   }
 
-  async function fillRandomPlaylist(playlist: Playlist) {}
+  async function fillRandomPlaylist(playlist: Playlist) {
+    const trackCount =
+      $configuration.amountType === 'minutes'
+        ? Math.round(+$configuration.trackMinutes / 2)
+        : +$configuration.trackCount
+    const count = Math.min(Math.round(trackCount * 1.5), 1024)
+    const trackIds = await db.tracks.orderBy('trackId').uniqueKeys()
+    console.log(count, trackIds)
+  }
 
   async function shuffle() {
     isShuffling = true
