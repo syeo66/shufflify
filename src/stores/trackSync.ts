@@ -65,8 +65,10 @@ function createTrackSyncStore() {
         console.error(tracks.error)
       }
     }
+
     await db.tracks.bulkPut(
       allTracks.map((track) => ({
+        duration_ms: track.track.duration_ms,
         isSynced: 1,
         playlistId: input.id,
         timestamp: Date.now(),

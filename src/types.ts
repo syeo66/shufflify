@@ -112,6 +112,7 @@ export type Album = z.infer<typeof albumSchema>
 export const trackSchema = z.object({
   album: albumSchema,
   artists: z.array(artistSchema),
+  duration_ms: z.number(),
   id: z.string(),
   name: z.string(),
   preview_url: z.string().nullable(),

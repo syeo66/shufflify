@@ -33,6 +33,7 @@
     "@fontsource/ibm-plex-mono": "^5.0.8",
     "@tanstack/svelte-query": "^5.14.2",
     "dexie": "^4.0.1-beta.6",
+    "random": "^4.1.0",
     "zod": "^3.22.4"
   }
 }

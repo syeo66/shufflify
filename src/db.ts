@@ -1,11 +1,12 @@
 import Dexie, { type Table } from 'dexie'
 
 export interface Track {
+  duration_ms: number
   id?: number
-  trackId: string
-  playlistId: string
   isSynced: 0 | 1
+  playlistId: string
   timestamp: number
+  trackId: string
 }
 
 export class ShufflifyDexie extends Dexie {

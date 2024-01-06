@@ -1,4 +1,5 @@
 <script lang="ts">
+  import random from 'random'
   import { liveQuery } from 'dexie'
 
   import { configuration } from '../stores/configuration'
@@ -14,6 +15,7 @@
   import Playlists from './Playlists.svelte'
   import Stats from './Stats.svelte'
   import Refresh from './icons/Refresh.svelte'
+  import chunkArray from '../functions/chunkArray'
 
   let lastUpdated = liveQuery(() => db.tracks.orderBy('timestamp').last())
 
@@ -27,14 +29,14 @@
     const playlistId = playlist.id
     const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`
 
-    fetch(url, {
+    await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${$token}`,
       },
       body: JSON.stringify({
-        uris: trackUris,
+        uris: trackUris.map((uri) => `spotify:track:${uri}`),
         position: 0,
       }),
     })
@@ -62,13 +64,27 @@
   }
 
   async function fillRandomPlaylist(playlist: Playlist) {
-    const trackCount =
-      $configuration.amountType === 'minutes'
-        ? Math.round(+$configuration.trackMinutes / 2)
-        : +$configuration.trackCount
-    const count = Math.min(Math.round(trackCount * 1.5), 1024)
     const trackIds = await db.tracks.orderBy('trackId').uniqueKeys()
-    console.log(count, trackIds)
+    const target =
+      $configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount
+    let current = 0
+    const chosen: string[] = []
+
+    while (current < target) {
+      const trackId = random.choice(trackIds.map((id) => id.toString()))
+      if (!trackId) {
+        break
+      }
+      chosen.push(trackId)
+      if ($configuration.amountType === 'minutes') {
+        const track = await db.tracks.where('trackId').equals(trackId).first()
+        current += (track?.duration_ms ?? 180000) / 1000
+      } else {
+        current += 1
+      }
+    }
+
+    await Promise.all(chunkArray(chosen, 100).map((chunk) => addRandomTracks(playlist, chunk)))
   }
 
   async function shuffle() {
@@ -96,8 +112,7 @@
     }
 
     await fillRandomPlaylist(existingPlaylist)
-
-    console.log(existingPlaylist)
+    await playlists.refetch()
 
     isShuffling = false
   }
