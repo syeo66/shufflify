@@ -189,6 +189,10 @@
     align-items: center;
   }
 
+  .shuffle button {
+    font-size: 1.5rem;
+  }
+
   .stats {
     grid-area: main;
     display: flex;
@@ -203,9 +207,19 @@
       align-items: flex-start;
     }
 
+    .stats {
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 0;
+      padding: 0;
+    }
+
     main button {
-      align-self: center;
       margin-bottom: 1rem;
+    }
+
+    .shuffle {
+      width: 100%;
     }
   }
 </style>
