@@ -29,7 +29,7 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: felx-start center;
+  place-items: flex-start center;
   min-width: 320px;
   min-height: 100vh;
 }
