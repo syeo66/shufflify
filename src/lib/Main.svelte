@@ -1,14 +1,11 @@
 <script lang="ts">
   import random from 'random'
-  import { liveQuery } from 'dexie'
 
   import { configuration } from '../stores/configuration'
-  import { db } from '../db'
-  import { playlistSchema, type Playlist } from '../types'
+  import { playlistSchema, type Playlist, tracksResponseSchema } from '../types'
   import { playlists } from '../stores/playlists'
   import { stats } from '../stores/stats'
   import { token } from '../stores/token'
-  import { trackSync } from '../stores/trackSync'
 
   import Configuration from './Configuration.svelte'
   import Header from './Header.svelte'
@@ -16,8 +13,7 @@
   import Stats from './Stats.svelte'
   import Refresh from './icons/Refresh.svelte'
   import chunkArray from '../functions/chunkArray'
-
-  let lastUpdated = liveQuery(() => db.tracks.orderBy('timestamp').last())
+  import getToken from '../functions/getToken'
 
   let isShuffling = false
 
@@ -63,21 +59,58 @@
     return playlistSchema.parse(data)
   }
 
+  function findTrackInPlaylist(playlists: { id: string; total: number }[], idx: number): [string | null, number] {
+    let start = 0
+
+    for (const playlist of playlists) {
+      if (idx >= start && idx < start + playlist.total) {
+        return [playlist.id, idx - start]
+      }
+      start += playlist.total
+    }
+
+    return [null, idx - start]
+  }
+
+  async function retrieveOneTrackFromPlaylist([playlistId, idx]: [string | null, number]) {
+    const url = !playlistId
+      ? `https://api.spotify.com/v1/me/tracks?offset=${idx}&limit=1`
+      : `https://api.spotify.com/v1/playlists/${playlistId}/tracks?offset=${idx}&limit=1`
+
+    const response = await fetch(url, {
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    })
+
+    const jsonData = await response.json()
+    const data = tracksResponseSchema.parse(jsonData)
+
+    console.log(data)
+    return data.items[0].track
+  }
+
   async function fillRandomPlaylist(playlist: Playlist) {
-    const trackIds = await db.tracks.orderBy('trackId').uniqueKeys()
+    const totalCount = $stats.selectedTrackCount
+    const playlists = $stats.selectedPlaylists.map(({ id, tracks: { total } }) => ({ id, total }))
+
     const target =
       $configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount
     let current = 0
     const chosen: string[] = []
 
     while (current < target) {
-      const trackId = random.choice(trackIds.map((id) => id.toString()))
+      const selectedIdx = random.int(0, totalCount - 1)
+      const chosenTrack = findTrackInPlaylist(playlists, selectedIdx)
+      const track = await retrieveOneTrackFromPlaylist(chosenTrack)
+
+      const trackId = track.id
       if (!trackId) {
         break
       }
       chosen.push(trackId)
       if ($configuration.amountType === 'minutes') {
-        const track = await db.tracks.where('trackId').equals(trackId).first()
         current += (track?.duration_ms ?? 180000) / 1000
       } else {
         current += 1
@@ -119,10 +152,6 @@
 </script>
 
 <div>
-  {#if $trackSync.isLoading}
-    <progress class="progress" value={$trackSync.progress} max={$trackSync.total} />
-  {/if}
-
   <Header />
 
   <section>
@@ -131,35 +160,20 @@
 
     <main class="card">
       <div class="stats">
-        <button on:click={() => trackSync.start($stats.selectedPlaylists)} disabled={!!$trackSync.isLoading}>
-          <Refresh class={$trackSync.isLoading ? 'spin' : ''} />
-          Synchronize Tracks</button
-        >
         <Stats />
       </div>
 
-      {#if $lastUpdated?.timestamp && !$trackSync.isLoading}
-        <div class="shuffle">
-          <button on:click={shuffle} disabled={isShuffling}>
-            <Refresh class={isShuffling ? 'spin' : ''} />
-            Shuffle
-          </button>
-        </div>
-      {/if}
+      <div class="shuffle">
+        <button on:click={shuffle} disabled={isShuffling}>
+          <Refresh class={isShuffling ? 'spin' : ''} />
+          Shuffle
+        </button>
+      </div>
     </main>
   </section>
 </div>
 
 <style>
-  .progress {
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    pointer-events: none;
-  }
-
   section {
     text-align: left;
     display: grid;
