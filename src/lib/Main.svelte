@@ -87,17 +87,16 @@
     const jsonData = await response.json()
     const data = tracksResponseSchema.parse(jsonData)
 
-    console.log(data)
     return data.items[0].track
   }
+
+  let current = 0
+  let target = $configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount
 
   async function fillRandomPlaylist(playlist: Playlist) {
     const totalCount = $stats.selectedTrackCount
     const playlists = $stats.selectedPlaylists.map(({ id, tracks: { total } }) => ({ id, total }))
 
-    const target =
-      $configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount
-    let current = 0
     const chosen: string[] = []
 
     while (current < target) {
@@ -122,6 +121,8 @@
 
   async function shuffle() {
     isShuffling = true
+    current = 0
+    target = $configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount
     await playlists.refetch()
 
     let existingPlaylist = $playlists.data?.find((playlist) => playlist.name === $configuration.randomListName) ?? null
@@ -166,7 +167,7 @@
       <div class="shuffle">
         <button on:click={shuffle} disabled={isShuffling}>
           <Refresh class={isShuffling ? 'spin' : ''} />
-          Shuffle
+          {isShuffling ? `${Math.trunc((current / target) * 100)}%` : 'Shuffle'}
         </button>
       </div>
     </main>
@@ -205,6 +206,7 @@
 
   .shuffle button {
     font-size: 1.5rem;
+    width: 8em;
   }
 
   .stats {
