@@ -62,7 +62,7 @@ export const playlistSchema = z.object({
   images: z.array(imageSchema).optional(),
   name: z.string(),
   owner: z.object({
-    display_name: z.string(),
+    display_name: z.string().nullable(),
   }),
   snapshot_id: z.string().optional(),
   tracks: z.object({
