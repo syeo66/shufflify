@@ -59,7 +59,7 @@ export const playlistSchema = z.object({
   }),
   href: z.string(),
   id: z.string(),
-  images: z.array(imageSchema).optional(),
+  images: z.array(imageSchema).nullable().optional(),
   name: z.string(),
   owner: z.object({
     display_name: z.string().nullable(),
