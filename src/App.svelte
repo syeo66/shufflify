@@ -15,7 +15,13 @@
     }
   }
 
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 0,
+      },
+    },
+  })
 </script>
 
 <QueryClientProvider client={queryClient}>
@@ -26,8 +32,7 @@
 </QueryClientProvider>
 
 <footer>
-  This website is communicating with the Spotify API only. It never sends or
-  stores any data to its own server.
+  This website is communicating with the Spotify API only. It never sends or stores any data to its own server.
 </footer>
 
 <style>
