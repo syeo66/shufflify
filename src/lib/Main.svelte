@@ -41,6 +41,8 @@
   async function createRandomPlaylist(): Promise<Playlist> {
     const url = 'https://api.spotify.com/v1/me/playlists'
 
+    const dateString = $configuration.addDateToListName ? ` ${new Date().toISOString().substring(0, 10)}` : ''
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -48,7 +50,7 @@
         Authorization: `Bearer ${$token}`,
       },
       body: JSON.stringify({
-        name: $configuration.randomListName,
+        name: $configuration.randomListName + dateString,
         description: 'Shufflify Playlist',
         public: false,
       }),
@@ -125,7 +127,8 @@
     target = $configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount
     await playlists.refetch()
 
-    let existingPlaylist = $playlists.data?.find((playlist) => playlist.name === $configuration.randomListName) ?? null
+    let existingPlaylist =
+      $playlists.data?.find((playlist) => playlist.name.startsWith($configuration.randomListName)) ?? null
 
     if ($configuration.purgeOnShuffle && existingPlaylist) {
       const url = `https://api.spotify.com/v1/playlists/${existingPlaylist.id}/followers`

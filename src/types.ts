@@ -5,6 +5,7 @@ const commonConfigSchema = z.object({
   purgeOnShuffle: z.boolean(),
   randomListName: z.string(),
   syncFavorites: z.boolean(),
+  addDateToListName: z.boolean(),
 })
 export const configurationSchema = z.discriminatedUnion('amountType', [
   commonConfigSchema

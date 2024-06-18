@@ -60,6 +60,23 @@
   <div>
     <div class="field">
       <label>
+        <input type="checkbox" bind:checked={$configuration.addDateToListName} />
+        Add Date to Playlist Name
+      </label>
+    </div>
+
+    <div class="help">
+      {#if $configuration.addDateToListName}
+        Add the current date to the playlist name.
+      {:else}
+        Do not add the current date to the playlist name.
+      {/if}
+    </div>
+  </div>
+
+  <div>
+    <div class="field">
+      <label>
         <input type="checkbox" bind:checked={$configuration.purgeOnShuffle} />
         Purge Playlist
       </label>

@@ -5,6 +5,7 @@ const CONFIG_KEY = 'shufflify.config'
 const DEFAULT_PLAYLIST_NAME = 'Advanced Shuffle'
 
 const initialConfig: Configuration = {
+  addDateToListName: false,
   amountType: 'minutes',
   checkedPlaylists: [],
   purgeOnShuffle: true,
