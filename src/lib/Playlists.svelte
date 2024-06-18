@@ -15,7 +15,12 @@
   <ul>
     {#each $playlists.data?.sort((a, b) => a.name.trim().localeCompare(b.name.trim())) || [] as playlist}
       <li>
-        <input type="checkbox" bind:group={$configuration.checkedPlaylists} value={playlist.id} />{playlist.name}
+        <input
+          bind:group={$configuration.checkedPlaylists}
+          disabled={playlist.name.startsWith($configuration.randomListName)}
+          type="checkbox"
+          value={playlist.id}
+        />{playlist.name}
         <div class="counts">{playlist.tracks.total}</div>
       </li>
     {/each}
