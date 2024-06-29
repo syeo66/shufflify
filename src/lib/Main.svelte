@@ -110,6 +110,16 @@
       if (!trackId) {
         break
       }
+
+      const url = `https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`
+      await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${$token}`,
+        },
+      })
+
       chosen.push(trackId)
       if ($configuration.amountType === 'minutes') {
         current += (track?.duration_ms ?? 180000) / 1000
