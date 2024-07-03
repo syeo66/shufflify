@@ -8,6 +8,13 @@ function createAvailableDeviceStore() {
   async function getCurrentDevice() {
     const url = 'https://api.spotify.com/v1/me/player/devices'
 
+    const token = getToken()
+
+    if (token === null || token === '') {
+      set(null)
+      return
+    }
+
     try {
       const response = await fetch(url, {
         method: 'get',
