@@ -90,6 +90,23 @@
       {/if}
     </div>
   </div>
+
+  <div>
+    <div class="field">
+      <label>
+        <input type="checkbox" bind:checked={$configuration.addToQueue} />
+        Add to Queue
+      </label>
+    </div>
+
+    <div class="help">
+      {#if $configuration.addToQueue}
+        If a device is available the tracks are added to the queue and the playlist.
+      {:else}
+        The tracks are only added to the playlist.
+      {/if}
+    </div>
+  </div>
 </div>
 
 <style>

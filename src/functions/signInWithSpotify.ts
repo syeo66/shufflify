@@ -3,7 +3,7 @@ function signInWithSpotify() {
 
   const appUrl = encodeURIComponent(window.location.href.split('#')[0])
   const scopes =
-    'user-library-read playlist-read-private playlist-modify-private playlist-modify-public user-modify-playback-state'
+    'user-library-read playlist-read-private playlist-modify-private playlist-modify-public user-modify-playback-state user-read-playback-state'
   const url =
     `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&redirect_uri=${appUrl}&response_type=token` +
     `&scope=${encodeURIComponent(scopes)}`

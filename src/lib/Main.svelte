@@ -14,6 +14,7 @@
   import Refresh from './icons/Refresh.svelte'
   import chunkArray from '../functions/chunkArray'
   import getToken from '../functions/getToken'
+  import { availableDevice } from '../stores/availableDevice'
 
   let isShuffling = false
 
@@ -111,14 +112,16 @@
         break
       }
 
-      const url = `https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`
-      await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${$token}`,
-        },
-      })
+      if ($configuration.addToQueue && $availableDevice) {
+        const url = `https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`
+        await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${$token}`,
+          },
+        })
+      }
 
       chosen.push(trackId)
       if ($configuration.amountType === 'minutes') {

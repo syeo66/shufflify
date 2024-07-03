@@ -1,11 +1,12 @@
 import { z } from 'zod'
 
 const commonConfigSchema = z.object({
+  addDateToListName: z.boolean(),
+  addToQueue: z.boolean(),
   checkedPlaylists: z.array(z.string()),
   purgeOnShuffle: z.boolean(),
   randomListName: z.string(),
   syncFavorites: z.boolean(),
-  addDateToListName: z.boolean(),
 })
 export const configurationSchema = z.discriminatedUnion('amountType', [
   commonConfigSchema
@@ -142,3 +143,17 @@ export const tracksResponseSchema = z.object({
   total: z.number(),
 })
 export type TrackResponse = z.infer<typeof tracksResponseSchema>
+
+export const devicesResponseSchema = z.object({
+  devices: z.array(
+    z.object({
+      id: z.string(),
+      is_active: z.boolean(),
+      is_restricted: z.boolean(),
+      name: z.string(),
+      type: z.string(),
+      volume_percent: z.number().nullable(),
+    }),
+  ),
+})
+export type DevicesResponse = z.infer<typeof devicesResponseSchema>
