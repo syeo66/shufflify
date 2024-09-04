@@ -32,7 +32,7 @@
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.0.8",
     "@tanstack/svelte-query": "^5.14.2",
-    "random": "^4.1.0",
+    "random": "^5.0.1",
     "zod": "^3.22.4"
   }
 }
