@@ -1,15 +1,19 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import login from '../functions/signInWithSpotify'
   import { token } from '../stores/token'
 
-  $: if ($token) {
-    window.location.href = '/app'
-  }
+  run(() => {
+    if ($token) {
+      window.location.href = '/app'
+    }
+  });
 </script>
 
 <main>
   <div class="card">
-    <button on:click={login}>Login with Spotify</button>
+    <button onclick={login}>Login with Spotify</button>
   </div>
 </main>
 

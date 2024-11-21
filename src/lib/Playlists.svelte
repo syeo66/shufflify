@@ -7,7 +7,7 @@
 <div class="paylists card">
   <div class="header">
     <h2>Playlists</h2>
-    <button on:click={() => playlists.refetch()} disabled={$playlists.isLoading}
+    <button onclick={() => playlists.refetch()} disabled={$playlists.isLoading}
       ><Refresh class={$playlists.isLoading ? 'spin' : ''} /></button
     >
   </div>

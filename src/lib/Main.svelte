@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import random from 'random'
 
   import { configuration } from '../stores/configuration'
@@ -16,11 +18,13 @@
   import getToken from '../functions/getToken'
   import { availableDevice } from '../stores/availableDevice'
 
-  let isShuffling = false
+  let isShuffling = $state(false)
 
-  $: if (!$token) {
-    window.location.href = '/'
-  }
+  run(() => {
+    if (!$token) {
+      window.location.href = '/'
+    }
+  });
 
   async function addRandomTracks(playlist: Playlist, trackUris: string[]) {
     const playlistId = playlist.id
@@ -93,8 +97,8 @@
     return data.items[0].track
   }
 
-  let current = 0
-  let target = $configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount
+  let current = $state(0)
+  let target = $state($configuration.amountType === 'minutes' ? +$configuration.trackMinutes * 60 : +$configuration.trackCount)
 
   async function fillRandomPlaylist(playlist: Playlist) {
     const totalCount = $stats.selectedTrackCount
@@ -181,7 +185,7 @@
       </div>
 
       <div class="shuffle">
-        <button on:click={shuffle} disabled={isShuffling}>
+        <button onclick={shuffle} disabled={isShuffling}>
           <Refresh class={isShuffling ? 'spin' : ''} />
           {isShuffling ? `${Math.trunc((current / target) * 100)}%` : 'Shuffle'}
         </button>

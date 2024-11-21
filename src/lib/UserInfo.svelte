@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { createQuery } from '@tanstack/svelte-query'
   import { navigate } from 'svelte-routing'
 
@@ -10,11 +12,13 @@
     queryFn: () => retrieveUserData(),
   })
 
-  $: if ($query.error) {
-    console.log($query.error)
-    token.set('')
-    navigate('/')
-  }
+  run(() => {
+    if ($query.error) {
+      console.log($query.error)
+      token.set('')
+      navigate('/')
+    }
+  });
 </script>
 
 {#if $query.isPending}...{/if}

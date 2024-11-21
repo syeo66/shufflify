@@ -1,11 +1,15 @@
 <script lang="ts">
+  import { run } from 'svelte/legacy';
+
   import { navigate } from 'svelte-routing'
   import { token } from '../stores/token'
   import UserInfo from './UserInfo.svelte'
 
-  $: if (!$token) {
-    navigate('/')
-  }
+  run(() => {
+    if (!$token) {
+      navigate('/')
+    }
+  });
 
   function logout() {
     token.set('')
@@ -16,7 +20,7 @@
   <h1>Shufflify - Better shuffle for Spotify</h1>
   <div>
     <UserInfo />
-    <button on:click={logout}>Logout</button>
+    <button onclick={logout}>Logout</button>
   </div>
 </header>
 

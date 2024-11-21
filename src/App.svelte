@@ -6,7 +6,11 @@
   import Main from './lib/Main.svelte'
   import { token } from './stores/token'
 
-  export let url = ''
+  interface Props {
+    url?: string;
+  }
+
+  let { url = '' }: Props = $props();
 
   for (const entry of window.location.hash.substring(1).split('&')) {
     const splitEntry = entry.split('=')
