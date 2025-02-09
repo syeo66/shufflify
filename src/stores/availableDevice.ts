@@ -34,7 +34,7 @@ function createAvailableDeviceStore() {
       if (!parsedData.success) {
         set(null)
       }
-    } catch (err) {
+    } catch {
       set(null)
     }
 
